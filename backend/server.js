@@ -70,7 +70,7 @@ app.get("/api/todos/:id", async (req, res) => {
         const { id } = req.params;
 
         const todo = await sql`
-            SELECT * from todos WHERE id = ${id}
+            SELECT * FROM todos WHERE id = ${id}
         `
         res.status(200).json(todo[0]);
 
@@ -131,6 +131,29 @@ app.post("/api/users", async (req, res) => {
 // api: update todo
 
 // api: delete todo
+app.delete("/api/todos/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(parseInt(id))) {
+            return res.status(400).json({ message: "Invalid todo ID." })
+        }
+
+        const result = await sql`
+            DELETE FROM todos WHERE id = ${id} RETURNING *
+        `
+        
+        if (result.length === 0) {
+            res.status(404).json({ message: "Todo not found" })
+        }
+
+        res.status(200).json({ message: "Todo deleted successfully." })
+
+    } catch (err) {
+        console.log("Error deleting the todo:", err);
+        res.status(500).json({ message: "Internal server error." });
+    }
+});
 
 // initialize
 initDB().then(() => {
