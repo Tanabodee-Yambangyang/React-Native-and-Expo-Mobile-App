@@ -24,8 +24,8 @@ export const initDB = async () => {
         title TEXT NOT NULL,
         description TEXT,
         is_done BOOLEAN NOT NULL DEFAULT FALSE,
-        due_date TIMESTAMP,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        due_time TIME DEFAULT NULL,
         updated_at TIMESTAMP DEFAULT NULL
       )
     `;
