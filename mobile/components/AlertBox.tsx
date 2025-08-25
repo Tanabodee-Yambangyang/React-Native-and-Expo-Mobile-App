@@ -34,7 +34,7 @@ export default function AlertBox({ message, type = 'info', setter }: AlertBoxPro
   }[type];
 
   return (
-    <View className="absolute bottom-0 w-full p-4 z-50">
+    <View className="absolute top-0 w-full p-4 z-50">
       <View className={`flex flex-row items-center justify-between border-l-4 px-4 py-2 rounded-md ${typeStyles[type]}`}>
         <View className="flex flex-row items-center gap-2">
           <Ionicons name={iconName as any} size={24} color={iconColor} />
