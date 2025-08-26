@@ -13,7 +13,21 @@ export default function Page() {
   const [emailAddress, setEmailAddress] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string>('Something went wrong. Please try again.');
   const [hidePassword, setHidePassword] = useState(true)
+
+  const getClerkErrorMessage = (code: string): string => {
+    switch (code) {
+      case 'form_password_incorrect':
+        return 'Incorrect password. Please try again.';
+      case 'form_identifier_not_found':
+        return 'No account found with this email address.';
+      case 'form_param_format_invalid':
+        return 'Invalid email or password format.';
+      default:
+        return 'Something went wrong. Please try again.';
+    }
+  }
 
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
@@ -36,10 +50,13 @@ export default function Page() {
         // complete further steps.
         console.error(JSON.stringify(signInAttempt, null, 2))
       }
-    } catch (err) {
+    } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
+      // console.error(JSON.stringify(err, null, 2))
+      const code = err.errors?.[0]?.code;
+      setErrorMessage(getClerkErrorMessage(code));
+      setError(true);
     }
   }
 
@@ -55,7 +72,7 @@ export default function Page() {
 
         {error ? (
           <AlertBox
-            message={'Something went wrong, please try again.'}
+            message={errorMessage}
             type={'error'}
             setter={setError}
           />
@@ -65,31 +82,45 @@ export default function Page() {
           className={
             `
             bg-white px-4 py-2 rounded-md w-full border
-            ${error ? "border-red-500" : "border-gray-200"}
+            ${error && errorMessage.includes("email") ? "border-red-500 text-red-500" : "border-gray-200 text-black"}
             `
           }
           autoCapitalize="none"
           value={emailAddress}
           placeholder="Enter email"
-          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          placeholderTextColor={error && errorMessage.includes("email") ? "red" : "gray"}
+          onChangeText={(emailAddress) => {
+            setEmailAddress(emailAddress);
+            if (error) {
+              setError(false);
+              setErrorMessage('');
+            }
+          }}
         />
         <View className='bg-white w-full flex flex-row items-center rounded-md '>
           <TextInput
             className={
               `
                 bg-white px-4 py-2 rounded-md w-full border
-                  ${error ? "border-red-500" : "border-gray-200"}
+                  ${error && errorMessage.includes("password") ? "border-red-500 text-red-500" : "border-gray-200 text-black"}
                 `
             }
             value={password}
             placeholder="Enter password"
             secureTextEntry={hidePassword}
-            onChangeText={(password) => setPassword(password)}
+            placeholderTextColor={error && errorMessage.includes("password") ? "red" : "gray"}
+            onChangeText={(password) => {
+              setPassword(password);
+              if (error) {
+                setError(false);
+                setErrorMessage('');
+              }
+            }}
           />
           {!hidePassword ? (
-            <Feather name="eye-off" size={18} color="gray" className='absolute z-50 right-2' onPress={() => setHidePassword(prev => !prev)} />
+            <Feather name="eye-off" size={18} color={error && errorMessage.includes("password") ? "red" : "gray"} className='absolute z-50 right-2' onPress={() => setHidePassword(prev => !prev)} />
           ) : (
-            <Feather name="eye" size={18} color="gray" className='absolute z-50 right-2' onPress={() => setHidePassword(prev => !prev)} />
+            <Feather name="eye" size={18} color={error && errorMessage.includes("password") ? "red" : "gray"} className='absolute z-50 right-2' onPress={() => setHidePassword(prev => !prev)} />
           )}
         </View>
 
