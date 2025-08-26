@@ -109,8 +109,8 @@ export default function SignUpScreen() {
     <KeyboardAwareScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{ flexGrow: 1 }}
-      enableOnAndroid={ true }
-      enableAutomaticScroll={ true }
+      enableOnAndroid={true}
+      enableAutomaticScroll={true}
     >
       <View className='w-full h-full flex-1 justify-center items-center gap-4 px-6'>
         <>
@@ -127,9 +127,9 @@ export default function SignUpScreen() {
           <TextInput
             className={
               `
-            bg-white px-4 py-2 rounded-md w-full border
-            ${error ? "border-red-500" : "border-gray-200"}
-            `
+              bg-white px-4 py-2 rounded-md w-full border
+                ${error ? "border-red-500" : "border-gray-200"}
+              `
             }
             autoCapitalize="none"
             value={emailAddress}
@@ -141,9 +141,9 @@ export default function SignUpScreen() {
             <TextInput
               className={
                 `
-            bg-white px-4 py-2 rounded-md w-full border
-            ${error ? "border-red-500" : "border-gray-200"}
-            `
+                bg-white px-4 py-2 rounded-md w-full border
+                  ${error ? "border-red-500" : "border-gray-200"}
+                `
               }
               value={password}
               placeholder="Enter password"
@@ -172,6 +172,7 @@ export default function SignUpScreen() {
               <Text className='text-blue-500'>Sign in</Text>
             </Link>
           </View>
+          
         </>
       </View>
     </KeyboardAwareScrollView>
